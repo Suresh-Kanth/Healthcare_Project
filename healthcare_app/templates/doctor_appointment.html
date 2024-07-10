@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Appointment</title>
+    <link rel="icon" type="image/x-icon" href="media/pics/favicon.png">
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #b6d1dc;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #333;
+        }
+        /* Navigation styles */
+        nav {
+            background-color: #b6d1dc;
+            padding: 10px 0;
+        }
+        nav .container {
+            width: 99%;
+            max-width: 99%;
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 20px; /* Adjust padding as needed */
+        }
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        /* Form styles */
+        form {
+            margin-top: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input[type="text"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            height: 150px;
+        }
+        button {
+            background-color: #429fc1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #327fa7;
+        }
+        .logout-btn {
+            padding: 10px 20px;
+            background-color: #429fc1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .logout-btn:hover {
+            background-color: #327fa7;
+        }
+        /* Doctor profile section */
+        .doctor-profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .doctor-profile img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .doctor-profile h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div>
+                <a href="{% url 'dashboard' %}">Home</a>
+            </div>
+            <div>
+                <a href="{% url 'dashboard' %}">My Profile</a>
+                {% if user.is_doctor %}
+                    <a href="{% url 'addblog' %}">Add Blog</a>
+                    <a href="{% url 'myblogs' %}">My Blogs</a>
+                    <a href="{% url 'mydrafts' %}">My Drafts</a>
+                {% endif %}
+                <a href="{% url 'blogs' %}">Blogs</a>
+                {% if not user.is_doctor %}
+                    <a href="{% url 'bookappointment' %}">Book Appointment</a>
+                {% endif %}
+                <a href="{% url 'myappointments' %}">My Appointments</a>
+                <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="header">
+            <h1>Schedule Appointment</h1>
+        </div>
+        <div class="doctor-profile">
+            <img src="{{doctor.image.url}}" alt="{{ doctor.first_name }} {{ doctor.last_name }}">
+            <h2>{{ doctor.first_name }} {{ doctor.last_name }}</h2>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_speciality">Required Speciality:</label>
+                <input type="text" id="id_speciality" name="speciality" required>
+            </div>
+            <div class="form-group">
+                <label for="id_date">Date of Appointment:</label>
+                <input type="date" id="id_date" name="date" required>
+            </div>
+            <div class="form-group">
+                <label for="id_time">Start Time of Appointment:</label>
+                <input type="time" id="id_time" name="time" required>
+            </div>
+            <button type="submit">Confirm Appointment</button>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock %}
